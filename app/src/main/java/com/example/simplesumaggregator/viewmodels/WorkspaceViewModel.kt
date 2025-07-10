@@ -28,7 +28,7 @@ class WorkspaceViewModel(entries: List<Entry> = listOf()) : ViewModel() {
         if (entryGroupId != null && entryGroupId.length > _maxIdLength) errorBuilder.addMessage("Group ID cannot be longer than $_maxIdLength characters!")
         if (entryItemId.isBlank()) errorBuilder.addMessage("Item ID cannot be blank!")
         if (entryItemId.length > _maxIdLength) errorBuilder.addMessage("Item ID cannot be longer than $_maxIdLength characters!")
-        if (entryQuantity == null || entryQuantity <= 0) errorBuilder.addMessage("Quantity must be a positive number!")
+        if (entryQuantity == null) errorBuilder.addMessage("Quantity must be a number!")
         if (errorBuilder.hasMessages) return errorBuilder.build()
 
         _entries.add(Entry(entryGroupId, itemId, quantity.toInt()))

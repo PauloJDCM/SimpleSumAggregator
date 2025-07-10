@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -92,9 +94,7 @@ fun WorkspaceView(viewModel: WorkspaceViewModel, padding: PaddingValues = Paddin
                     itemId = ""
                     quantity = ""
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 64.dp)
+                modifier = Modifier.width(320.dp)
             ) {
                 Text("Add Entry", fontSize = 24.sp)
             }
@@ -103,7 +103,7 @@ fun WorkspaceView(viewModel: WorkspaceViewModel, padding: PaddingValues = Paddin
             HorizontalDivider()
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(viewModel.entries.reversed()) { entry ->
-                    EntryItemView(entry)
+                    EntryItem(entry)
                 }
             }
         }
@@ -111,27 +111,30 @@ fun WorkspaceView(viewModel: WorkspaceViewModel, padding: PaddingValues = Paddin
 }
 
 @Composable
-fun EntryItemView(entry: Entry) {
+fun EntryItem(entry: Entry) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .height(IntrinsicSize.Min)
             .padding(top = 8.dp)
             .background(MaterialTheme.colorScheme.primaryContainer),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         val itemModifier = Modifier.weight(1f)
-        EntryItem(text = entry.groupId ?: "", modifier = itemModifier)
-        EntryItem(text = entry.itemId, modifier = itemModifier)
-        EntryItem(text = entry.quantity.toString(), modifier = itemModifier)
+        EntryItemField(text = entry.groupId ?: "", modifier = itemModifier)
+        VerticalDivider(color = MaterialTheme.colorScheme.onPrimaryContainer)
+        EntryItemField(text = entry.itemId, modifier = itemModifier)
+        VerticalDivider(color = MaterialTheme.colorScheme.onPrimaryContainer)
+        EntryItemField(text = entry.quantity.toString(), modifier = itemModifier)
     }
 }
 
 @Composable
-fun EntryItem(text: String, modifier: Modifier) {
+fun EntryItemField(text: String, modifier: Modifier) {
     Text(
         text = text,
         textAlign = TextAlign.Center,
-        fontSize = 20.sp,
+        fontSize = 16.sp,
         fontWeight = FontWeight.SemiBold,
         color = MaterialTheme.colorScheme.onPrimaryContainer,
         modifier = modifier.padding(4.dp)
@@ -144,7 +147,8 @@ fun WorkspaceViewPreview() {
     val entries = listOf(
         Entry(groupId = null, itemId = "Item 1", quantity = 5),
         Entry(groupId = "Group 2", itemId = "Item 2", quantity = 10),
-        Entry(groupId = "Group 3", itemId = "Item 3", quantity = 15)
+        Entry(groupId = "Group 3", itemId = "Item 3", quantity = 15),
+        Entry(groupId = "Group 1234", itemId = "Item 12345", quantity = 11111111)
     )
 
     MaterialTheme {

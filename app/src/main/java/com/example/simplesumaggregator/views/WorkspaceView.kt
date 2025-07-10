@@ -1,5 +1,6 @@
 package com.example.simplesumaggregator.views
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -41,6 +43,7 @@ fun WorkspaceView(viewModel: WorkspaceViewModel, padding: PaddingValues = Paddin
     var groupId by remember { mutableStateOf("") }
     var itemId by remember { mutableStateOf("") }
     var quantity by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Surface(
         modifier = Modifier
@@ -74,7 +77,7 @@ fun WorkspaceView(viewModel: WorkspaceViewModel, padding: PaddingValues = Paddin
                 Spacer(modifier = Modifier.width(16.dp))
                 OutlinedTextField(
                     value = quantity,
-                    onValueChange = { quantity = it },
+                    onValueChange = { quantity = it.trimEnd() },
                     label = { Text("Quantity") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.weight(1f)
@@ -83,7 +86,9 @@ fun WorkspaceView(viewModel: WorkspaceViewModel, padding: PaddingValues = Paddin
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = {
-                    viewModel.addEntry(groupId, itemId, quantity)
+                    viewModel.addEntry(groupId, itemId, quantity)?.let { errorMessage ->
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                    }
                     itemId = ""
                     quantity = ""
                 },

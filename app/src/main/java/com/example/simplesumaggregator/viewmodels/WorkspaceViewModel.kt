@@ -1,13 +1,13 @@
 package com.example.simplesumaggregator.viewmodels
 
-import androidx.compose.runtime.toMutableStateList
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import com.example.simplesumaggregator.Entry
 import com.example.simplesumaggregator.MessageBuilder
 
-class WorkspaceViewModel(entries: List<Entry> = listOf()) : ViewModel() {
-    private val _entries = entries.toMutableStateList()
-    private val _maxIdLength = 10
+class WorkspaceViewModel(entries: SnapshotStateList<Entry>) : ViewModel() {
+    private val _entries = entries
+    private val _maxIdLength = 20
 
     val entries get() = _entries
 
@@ -33,5 +33,9 @@ class WorkspaceViewModel(entries: List<Entry> = listOf()) : ViewModel() {
 
         _entries.add(Entry(entryGroupId, itemId, quantity.toInt()))
         return null
+    }
+
+    fun removeEntry(entry: Entry) {
+        _entries.remove(entry)
     }
 }

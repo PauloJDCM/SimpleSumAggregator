@@ -1,6 +1,6 @@
 package com.example.simplesumaggregator
 
-enum class Views {
+enum class Routes {
     WORKSPACE,
     SUMMARY,
     HISTORY

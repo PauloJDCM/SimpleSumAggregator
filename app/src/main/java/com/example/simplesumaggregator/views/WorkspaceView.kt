@@ -120,7 +120,6 @@ fun WorkspaceView(
                         value = itemId,
                         onValueChange = { itemId = it },
                         label = { Text("Item ID") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
@@ -171,12 +170,17 @@ fun WorkspaceView(
 fun EntryItem(entry: Entry, onDelete: () -> Unit) {
     var showMenu by remember { mutableStateOf(false) }
 
+    val backgroundColor = if (showMenu) {
+        MaterialTheme.colorScheme.tertiaryContainer
+    } else {
+        MaterialTheme.colorScheme.primaryContainer
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .padding(top = 8.dp)
-            .background(MaterialTheme.colorScheme.primaryContainer)
+            .background(backgroundColor)
             .combinedClickable(
                 onClick = { },
                 onLongClick = { showMenu = true }

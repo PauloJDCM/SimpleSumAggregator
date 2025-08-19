@@ -46,6 +46,7 @@ fun SummaryView(
         color = MaterialTheme.colorScheme.background
     ) {
         Column {
+            //region Navigation Buttons
             Column {
                 Row(
                     modifier = Modifier
@@ -77,8 +78,9 @@ fun SummaryView(
                     }
                 }
             }
-
             HorizontalDivider(thickness = 4.dp, color = MaterialTheme.colorScheme.primary)
+            //endregion
+
 
             if (state) {
                 GroupAndItemIdSummary(viewModel.byGroupAndItemId)

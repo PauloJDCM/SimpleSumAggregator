@@ -18,9 +18,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.sharp.Menu
-import androidx.compose.material.icons.sharp.Star
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
@@ -76,12 +76,11 @@ fun WorkspaceView(
                 IconButton(
                     onClick = { onHistoryClick() },
                     modifier = Modifier.weight(1f),
-                    enabled = false
                 ) {
                     Icon(
-                        Icons.Sharp.Star,
+                        Icons.Default.Edit,
                         contentDescription = "History",
-                        tint = MaterialTheme.colorScheme.inversePrimary,
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(64.dp)
                     )
                 }
@@ -91,16 +90,16 @@ fun WorkspaceView(
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(
-                        Icons.Sharp.Menu,
+                        Icons.AutoMirrored.Filled.List,
                         contentDescription = "History",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(64.dp)
                     )
                 }
             }
+            HorizontalDivider(thickness = 4.dp, color = MaterialTheme.colorScheme.primary)
             //endregion
 
-            HorizontalDivider(thickness = 4.dp, color = MaterialTheme.colorScheme.primary)
             Column(
                 modifier = Modifier.padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -175,6 +174,7 @@ fun EntryItem(entry: Entry, onDelete: () -> Unit) {
     } else {
         MaterialTheme.colorScheme.primaryContainer
     }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()

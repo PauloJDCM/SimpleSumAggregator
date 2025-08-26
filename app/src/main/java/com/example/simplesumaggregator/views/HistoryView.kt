@@ -195,23 +195,11 @@ fun WorkspaceItemField(title: String, content: String, color: Color, modifier: M
 fun HistoryViewPreview() {
     val entries = listOf<Entry>().toMutableStateList()
 
-    val savedWorkspace = listOf(
-        SavedWorkspace("2025-08-19T07:59:11", listOf(Entry("1", "1", 1))),
-        SavedWorkspace(
-            "2025-08-16T07:59:11", listOf(
-                Entry("1", "1", 1),
-                Entry("", "2", 2),
-                Entry("", "3", 5),
-            )
-        )
-    )
-
     MaterialTheme {
         HistoryView(viewModel = viewModel {
             HistoryViewModel(
                 entries,
                 5,
-                savedWorkspace,
                 EntriesListState.NOT_SAVED,
                 File("")
             )

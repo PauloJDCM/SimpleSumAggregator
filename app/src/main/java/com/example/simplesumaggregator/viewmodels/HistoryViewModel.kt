@@ -2,6 +2,7 @@ package com.example.simplesumaggregator.viewmodels
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import com.example.simplesumaggregator.EntriesListState
 import com.example.simplesumaggregator.Entry
@@ -24,22 +25,17 @@ private const val SAVED_WORKSPACES_FILE_NAME = "recent_workspaces.json"
 class HistoryViewModel(
     entries: SnapshotStateList<Entry>,
     maxWorkspaces: Int,
-    savedWorkspaces: List<SavedWorkspace>,
     listState: EntriesListState,
     appFolder: File
 ) : ViewModel() {
     private val _entries = entries
     private val _maxRecentWorkspaces = maxWorkspaces
-    private val _savedWorkspacesList = mutableStateListOf<SavedWorkspace>()
+    private val _savedWorkspacesList = loadSavedWorkspaces(appFolder).toMutableStateList()
     private var _state = listState
     private val _saveFolder = appFolder
 
     val savedWorkspacesList get() = _savedWorkspacesList
     val canSave get() = _savedWorkspacesList.isNotEmpty() && _state == EntriesListState.NOT_SAVED
-
-    init {
-        _savedWorkspacesList.addAll(savedWorkspaces)
-    }
 
     suspend fun saveCurrentWorkspace(): String? {
         if (_state == EntriesListState.SAVED) return "Workspace already saved!"
@@ -80,6 +76,21 @@ class HistoryViewModel(
         _entries.clear()
         _entries.addAll(workspace.entries)
         _state = EntriesListState.SAVED
+    }
+
+    private fun loadSavedWorkspaces(folder: File): List<SavedWorkspace> {
+        val file = File(folder, SAVED_WORKSPACES_FILE_NAME)
+        return if (file.exists()) {
+            try {
+                val jsonString = file.readText()
+                Json.decodeFromString<List<SavedWorkspace>>(jsonString)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
     }
 
     private suspend fun saveWorkspaceListFile(): String? {

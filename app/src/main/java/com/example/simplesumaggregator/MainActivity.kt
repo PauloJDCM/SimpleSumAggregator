@@ -20,16 +20,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.simplesumaggregator.ui.theme.SimpleSumAggregatorTheme
 import com.example.simplesumaggregator.viewmodels.HistoryViewModel
-import com.example.simplesumaggregator.viewmodels.SavedWorkspace
 import com.example.simplesumaggregator.viewmodels.SummaryViewModel
 import com.example.simplesumaggregator.viewmodels.WorkspaceViewModel
 import com.example.simplesumaggregator.views.HistoryView
 import com.example.simplesumaggregator.views.SummaryView
 import com.example.simplesumaggregator.views.WorkspaceView
-import kotlinx.serialization.json.Json
 import java.io.File
 
-private const val SAVED_WORKSPACES_FILE_NAME = "recent_workspaces.json"
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +39,6 @@ class MainActivity : ComponentActivity() {
                     val entries = remember { mutableStateListOf<Entry>() }
                     val entriesListState = remember { EntriesListState.NOT_SAVED }
                     val appFolder = getAppFolder(LocalContext.current)
-                    val savedWorkspaces = remember { loadSavedWorkspaces(appFolder) }
 
                     NavHost(
                         navController = navController,
@@ -101,7 +97,6 @@ class MainActivity : ComponentActivity() {
                                     HistoryViewModel(
                                         entries,
                                         10,
-                                        savedWorkspaces,
                                         entriesListState,
                                         appFolder
                                     )
@@ -122,21 +117,6 @@ class MainActivity : ComponentActivity() {
             appFolder.mkdirs()
         }
         return appFolder
-    }
-
-    private fun loadSavedWorkspaces(folder: File): List<SavedWorkspace> {
-        val file = File(folder, SAVED_WORKSPACES_FILE_NAME)
-        return if (file.exists()) {
-            try {
-                val jsonString = file.readText()
-                Json.decodeFromString<List<SavedWorkspace>>(jsonString)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                emptyList()
-            }
-        } else {
-            emptyList()
-        }
     }
 }
 

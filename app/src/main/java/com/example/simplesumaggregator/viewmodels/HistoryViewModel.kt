@@ -5,6 +5,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import com.example.simplesumaggregator.EntriesListState
 import com.example.simplesumaggregator.Entry
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -39,7 +41,7 @@ class HistoryViewModel(
         _savedWorkspacesList.addAll(savedWorkspaces)
     }
 
-    fun saveCurrentWorkspace(): String? {
+    suspend fun saveCurrentWorkspace(): String? {
         if (_state == EntriesListState.SAVED) return "Workspace already saved!"
         if (_entries.isEmpty()) return "No entries to save!"
 
@@ -50,8 +52,10 @@ class HistoryViewModel(
         val fileToSave = File(_saveFolder, "${fileName}.json")
 
         return try {
-            val entriesJson = Json.encodeToString(_entries.toList())
-            fileToSave.writeText(entriesJson)
+            withContext(Dispatchers.IO) {
+                val entriesJson = Json.encodeToString(_entries.toList())
+                fileToSave.writeText(entriesJson)
+            }
 
             val newSavedWorkspace = SavedWorkspace(
                 savedOn = dateTime.toString(), entries = _entries.toList() // Ensure to save a copy
@@ -78,12 +82,14 @@ class HistoryViewModel(
         _state = EntriesListState.SAVED
     }
 
-    private fun saveWorkspaceListFile(): String? {
+    private suspend fun saveWorkspaceListFile(): String? {
         val savedWorkspacesFile = File(_saveFolder, SAVED_WORKSPACES_FILE_NAME)
         return try {
-            // Serialize a copy for data integrity
-            val serialized = Json.encodeToString(_savedWorkspacesList.toList())
-            savedWorkspacesFile.writeText(serialized)
+            withContext(Dispatchers.IO) {
+                // Serialize a copy for data integrity
+                val serialized = Json.encodeToString(_savedWorkspacesList.toList())
+                savedWorkspacesFile.writeText(serialized)
+            }
             null
         } catch (e: Exception) {
             e.printStackTrace()

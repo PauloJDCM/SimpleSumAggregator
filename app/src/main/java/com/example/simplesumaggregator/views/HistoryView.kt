@@ -27,6 +27,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,7 @@ import com.example.simplesumaggregator.EntriesListState
 import com.example.simplesumaggregator.Entry
 import com.example.simplesumaggregator.viewmodels.HistoryViewModel
 import com.example.simplesumaggregator.viewmodels.SavedWorkspace
+import kotlinx.coroutines.launch
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -51,6 +53,7 @@ fun HistoryView(
     onBackClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     val saveButtonBackgroundColor = if (viewModel.canSave) {
         MaterialTheme.colorScheme.primary
@@ -96,8 +99,10 @@ fun HistoryView(
                 Column {
                     Button(
                         onClick = {
-                            viewModel.saveCurrentWorkspace()?.let { errorMessage ->
-                                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                            scope.launch {
+                                viewModel.saveCurrentWorkspace()?.let { errorMessage ->
+                                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                                }
                             }
                         },
                         modifier = Modifier

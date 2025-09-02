@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
                                 viewModel = viewModel {
                                     HistoryViewModel(
                                         entries,
-                                        10,
+                                        20,
                                         entriesListState,
                                         appFolder
                                     )

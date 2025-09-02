@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -124,10 +125,14 @@ fun HistoryView(
                     }
                 }
 
-                Text(
-                    "Recent Workspaces",
-                    style = MaterialTheme.typography.headlineMedium
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "Recent Workspaces",
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text("${viewModel.savedWorkspacesList.size} / ${viewModel.maxSavedWorkspaces}", fontSize = 20.sp)
+                }
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(4.dp))
 

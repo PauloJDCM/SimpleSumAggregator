@@ -27,13 +27,14 @@ class HistoryViewModel(
     appFolder: File
 ) : ViewModel() {
     private val _entries = entries
-    private val _maxRecentWorkspaces = maxWorkspaces
+    private val _maxSavedWorkspaces = maxWorkspaces
     private val _savedWorkspacesList = loadSavedWorkspaces(appFolder).toMutableStateList()
     private var _listState = listState
     private val _saveFolder = appFolder
 
     val savedWorkspacesList get() = _savedWorkspacesList
     val canSave get() = _entries.isNotEmpty() && _listState.value == EntriesListState.NOT_SAVED
+    val maxSavedWorkspaces get() = _maxSavedWorkspaces
 
     suspend fun saveCurrentWorkspace(): String? {
         if (_listState.value == EntriesListState.SAVED) return "Workspace already saved!"
@@ -85,7 +86,7 @@ class HistoryViewModel(
             entries = aggregatedEntries
         )
         _savedWorkspacesList.add(0, newSavedWorkspace)
-        if (_savedWorkspacesList.size > _maxRecentWorkspaces) {
+        if (_savedWorkspacesList.size > _maxSavedWorkspaces) {
             _savedWorkspacesList.removeAt(_savedWorkspacesList.lastIndex)
         }
     }

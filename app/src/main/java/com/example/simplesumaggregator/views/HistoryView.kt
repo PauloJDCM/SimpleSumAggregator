@@ -130,7 +130,7 @@ fun HistoryView(
                     Text("No recent workspaces found.")
                 } else {
                     LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                        items(viewModel.savedWorkspacesList) { workspace ->
+                        items(viewModel.savedWorkspacesList, key = { it.savedOn }) { workspace ->
                             WorkspaceItem(workspaceInfo = workspace, onClick = {
                                 viewModel.loadWorkspace(workspace)
                                 onBackClick()

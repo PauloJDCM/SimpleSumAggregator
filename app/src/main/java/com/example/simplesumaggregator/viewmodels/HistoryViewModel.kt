@@ -71,9 +71,17 @@ class HistoryViewModel(
     }
 
     private fun addCurrentWorkspaceToList() {
+        val aggregatedEntries = _entries.groupBy { it.groupId to it.itemId }
+            .map { (key, entries) ->
+                Entry(
+                    groupId = key.first,
+                    itemId = key.second,
+                    quantity = entries.sumOf { it.quantity })
+            }
+
         val newSavedWorkspace = SavedWorkspace(
             savedOn = LocalDateTime.now().toString(),
-            entries = _entries.toList() // Ensure to save a copy
+            entries = aggregatedEntries
         )
         _savedWorkspacesList.add(0, newSavedWorkspace)
         if (_savedWorkspacesList.size > _maxRecentWorkspaces) {

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,7 +38,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
                     val navController = rememberNavController()
                     val entries = remember { mutableStateListOf<Entry>() }
-                    val entriesListState = remember { EntriesListState.NOT_SAVED }
+                    val entriesListState = remember { mutableStateOf(EntriesListState.NOT_SAVED) }
                     val appFolder = getAppFolder(LocalContext.current)
 
                     NavHost(
@@ -47,7 +48,12 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Routes.WORKSPACE.name) {
                             WorkspaceView(
-                                viewModel = viewModel { WorkspaceViewModel(entries) },
+                                viewModel = viewModel {
+                                    WorkspaceViewModel(
+                                        entries,
+                                        entriesListState
+                                    )
+                                },
                                 onSummaryClick = {
                                     navController.navigate(Routes.SUMMARY.name)
                                 },

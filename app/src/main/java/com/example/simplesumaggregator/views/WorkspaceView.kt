@@ -47,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.simplesumaggregator.EntriesListState
 import com.example.simplesumaggregator.Entry
 import com.example.simplesumaggregator.viewmodels.WorkspaceViewModel
 
@@ -235,6 +236,11 @@ fun WorkspaceViewPreview() {
     ).toMutableStateList()
 
     MaterialTheme {
-        WorkspaceView(viewModel = viewModel { WorkspaceViewModel(entries) })
+        WorkspaceView(viewModel = viewModel {
+            WorkspaceViewModel(
+                entries,
+                mutableStateOf(EntriesListState.NOT_SAVED)
+            )
+        })
     }
 }

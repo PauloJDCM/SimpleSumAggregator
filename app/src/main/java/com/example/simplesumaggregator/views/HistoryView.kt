@@ -27,6 +27,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
@@ -54,8 +58,9 @@ fun HistoryView(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val state by remember { derivedStateOf { viewModel.canSave } }
 
-    val saveButtonBackgroundColor = if (viewModel.canSave) {
+    val saveButtonBackgroundColor = if (state) {
         MaterialTheme.colorScheme.primary
     } else {
         MaterialTheme.colorScheme.inversePrimary
@@ -193,14 +198,17 @@ fun WorkspaceItemField(title: String, content: String, color: Color, modifier: M
 @Preview(showBackground = true)
 @Composable
 fun HistoryViewPreview() {
-    val entries = listOf<Entry>().toMutableStateList()
+    val entries =
+        listOf(
+            Entry(groupId = null, itemId = "1", quantity = 5)
+        ).toMutableStateList()
 
     MaterialTheme {
         HistoryView(viewModel = viewModel {
             HistoryViewModel(
                 entries,
                 5,
-                EntriesListState.NOT_SAVED,
+                mutableStateOf(EntriesListState.NOT_SAVED),
                 File("")
             )
         })

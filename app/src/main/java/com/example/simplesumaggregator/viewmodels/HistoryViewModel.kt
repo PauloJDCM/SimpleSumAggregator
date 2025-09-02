@@ -1,5 +1,6 @@
 package com.example.simplesumaggregator.viewmodels
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
@@ -22,26 +23,26 @@ private const val SAVED_WORKSPACES_FILE_NAME = "recent_workspaces.json"
 class HistoryViewModel(
     entries: SnapshotStateList<Entry>,
     maxWorkspaces: Int,
-    listState: EntriesListState,
+    listState: MutableState<EntriesListState>,
     appFolder: File
 ) : ViewModel() {
     private val _entries = entries
     private val _maxRecentWorkspaces = maxWorkspaces
     private val _savedWorkspacesList = loadSavedWorkspaces(appFolder).toMutableStateList()
-    private var _state = listState
+    private var _listState = listState
     private val _saveFolder = appFolder
 
     val savedWorkspacesList get() = _savedWorkspacesList
-    val canSave get() = _savedWorkspacesList.isNotEmpty() && _state == EntriesListState.NOT_SAVED
+    val canSave get() = _entries.isNotEmpty() && _listState.value == EntriesListState.NOT_SAVED
 
     suspend fun saveCurrentWorkspace(): String? {
-        if (_state == EntriesListState.SAVED) return "Workspace already saved!"
+        if (_listState.value == EntriesListState.SAVED) return "Workspace already saved!"
         if (_entries.isEmpty()) return "No entries to save!"
 
         return try {
             addCurrentWorkspaceToList()
             saveWorkspaceListFile()
-            _state = EntriesListState.SAVED
+            _listState.value = EntriesListState.SAVED
             null
         } catch (e: Exception) {
             e.printStackTrace()
@@ -52,7 +53,7 @@ class HistoryViewModel(
     fun loadWorkspace(workspace: SavedWorkspace) {
         _entries.clear()
         _entries.addAll(workspace.entries)
-        _state = EntriesListState.SAVED
+        _listState.value = EntriesListState.SAVED
     }
 
     private fun loadSavedWorkspaces(folder: File): List<SavedWorkspace> {

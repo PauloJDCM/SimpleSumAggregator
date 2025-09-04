@@ -8,8 +8,7 @@ import com.example.simplesumaggregator.Entry
 import com.example.simplesumaggregator.MessageBuilder
 
 class WorkspaceViewModel(
-    entries: SnapshotStateList<Entry>,
-    listState: MutableState<EntriesListState>
+    entries: SnapshotStateList<Entry>, listState: MutableState<EntriesListState>
 ) : ViewModel() {
     private val _entries = entries
     private val _listState = listState
@@ -37,7 +36,7 @@ class WorkspaceViewModel(
         if (entryQuantity == null) errorBuilder.addMessage("Quantity must be a number!")
         if (errorBuilder.hasMessages) return errorBuilder.build()
 
-        _entries.add(Entry(entryGroupId, itemId, quantity.toInt()))
+        _entries.add(Entry(entryGroupId, entryItemId, quantity.trim().toInt()))
         _listState.value = EntriesListState.NOT_SAVED
         return null
     }

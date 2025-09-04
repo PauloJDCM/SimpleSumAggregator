@@ -212,7 +212,7 @@ fun HistoryViewPreview() {
         HistoryView(viewModel = viewModel {
             HistoryViewModel(
                 entries,
-                5,
+                10,
                 mutableStateOf(EntriesListState.NOT_SAVED),
                 File("")
             )

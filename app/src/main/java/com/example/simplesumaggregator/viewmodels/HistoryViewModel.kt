@@ -78,7 +78,8 @@ class HistoryViewModel(
                 Entry(
                     groupId = key.first,
                     itemId = key.second,
-                    quantity = entries.sumOf { it.quantity })
+                    quantity = entries.sumOf { it.quantity }
+                )
             }
 
         val newSavedWorkspace = SavedWorkspace(

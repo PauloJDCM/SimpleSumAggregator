@@ -156,7 +156,7 @@ fun WorkspaceView(
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
-                    items(viewModel.entries.reversed()) { entry ->
+                    items(viewModel.entries.reversed(), key = { it.id }) { entry ->
                         EntryItem(entry = entry, onDelete = { viewModel.removeEntry(entry) })
                     }
                 }
